@@ -11,14 +11,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:padding="1dp">
+        android:padding="1dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/backFromSettingsButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="start"
-            android:src="@drawable/back"
+            android:src="@drawable/ic_back"
             android:background="@android:color/white"
             />
 
@@ -51,8 +53,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:thumb="@drawable/knob"
-            app:track="@drawable/track"
+            android:thumb="@drawable/ic_knob"
+            app:track="@drawable/ic_track"
             tools:ignore="UseSwitchCompatOrMaterialXml"
             android:checked="true"/>
     </FrameLayout>
@@ -75,7 +77,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:src="@drawable/share"
+            android:src="@drawable/ic_share"
             android:background="@android:color/white"/>
     </FrameLayout>
 
@@ -97,7 +99,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:src="@drawable/support"
+            android:src="@drawable/ic_support"
             android:background="@android:color/white"
             />
     </FrameLayout>
@@ -120,7 +122,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:src="@drawable/agreement"
+            android:src="@drawable/ic_agreement"
             android:background="@android:color/white"
             />
     </FrameLayout>
