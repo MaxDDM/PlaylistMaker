@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/white"
+    android:background="?attr/ActivityBackgroundColor"
     android:orientation="vertical"
     android:id="@+id/main">
 
@@ -21,38 +21,30 @@
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:src="@drawable/ic_back"
-            android:background="@android:color/white"
+            android:background="?attr/ButtonsColor"
             />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/settings"
-            android:textColor="@color/black"
+            android:textColor="?attr/TextViewHeaderActivityColor"
             android:textSize="@dimen/text_size_22"
             android:gravity="center_vertical"
+            android:fontFamily="@font/ys_display_medium"
             />
     </LinearLayout>
 
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="61dp"
-        android:padding="@dimen/padding"
+        style="@style/FrameLayoutSettingsActivityStyle"
         android:layout_marginTop="24dp">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
             android:text="@string/black_theme"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_16"
-            android:gravity="center_vertical"
-            android:layout_gravity="start"/>
+            style="@style/TextViewSettingsActivityStyle"/>
 
         <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
+            style="@style/ImageButtonSettingsActivityStyle"
             android:thumb="@drawable/ic_knob"
             app:track="@drawable/ic_track"
             tools:ignore="UseSwitchCompatOrMaterialXml"
@@ -60,70 +52,46 @@
     </FrameLayout>
 
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="61dp"
-        android:padding="@dimen/padding">
+        style="@style/FrameLayoutSettingsActivityStyle">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
             android:text="@string/share"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_16"
-            android:gravity="center_vertical"
-            android:layout_gravity="start"/>
+            style="@style/TextViewSettingsActivityStyle"/>
 
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
+            android:id="@+id/shareButton"
+            style="@style/ImageButtonSettingsActivityStyle"
             android:src="@drawable/ic_share"
-            android:background="@android:color/white"/>
+            android:background="?attr/ButtonsColor"/>
     </FrameLayout>
 
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="61dp"
-        android:padding="@dimen/padding">
+        style="@style/FrameLayoutSettingsActivityStyle">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
             android:text="@string/support"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_16"
-            android:gravity="center_vertical"
-            android:layout_gravity="start"/>
+            style="@style/TextViewSettingsActivityStyle"/>
 
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
+            android:id="@+id/supportButton"
+            style="@style/ImageButtonSettingsActivityStyle"
             android:src="@drawable/ic_support"
-            android:background="@android:color/white"
+            android:background="?attr/ButtonsColor"
             />
     </FrameLayout>
 
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="61dp"
-        android:padding="@dimen/padding">
+        style="@style/FrameLayoutSettingsActivityStyle">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
             android:text="@string/agreement"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_16"
-            android:gravity="center_vertical"
-            android:layout_gravity="start"/>
+            style="@style/TextViewSettingsActivityStyle"/>
 
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
+            android:id="@+id/agreementButton"
+            style="@style/ImageButtonSettingsActivityStyle"
             android:src="@drawable/ic_agreement"
-            android:background="@android:color/white"
+            android:background="?attr/ButtonsColor"
             />
     </FrameLayout>
 </LinearLayout>

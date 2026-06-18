@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="MainActivityBackgroundColor" format="color" />
+    <attr name="ActivityBackgroundColor" format="color" />
+    <attr name="TextViewHeaderActivityColor" format="color" />
+    <attr name="ButtonsColor" format="color" />
+    <attr name="SearchTextColor" format="color" />
+</resources>

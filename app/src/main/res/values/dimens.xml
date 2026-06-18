@@ -4,4 +4,6 @@
     <dimen name="corner_radius">16sp</dimen>
     <dimen name="text_size_16">16sp</dimen>
     <dimen name="padding">16sp</dimen>
+    <dimen name="fr_layout_height_settings">61dp</dimen>
+    <dimen name="text_view_margin_start_main">1dp</dimen>
 </resources>
