@@ -1,0 +1,54 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="61dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?attr/ActivityBackgroundColor"
+    android:orientation="horizontal"
+    android:id="@+id/main">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/trackImageView"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="13dp"
+        android:scaleType="fitXY"
+        app:shapeAppearanceOverlay="@style/RoundedImage"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="14dp"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/trackName"
+            android:layout_width="match_parent"
+            android:layout_height="19dp"
+            android:textSize="16sp"
+            android:textColor="?attr/TextViewTracksColor"
+            android:fontFamily="@font/ys_display_medium"/>
+
+        <TextView
+            android:id="@+id/trackAuthorName"
+            android:layout_width="match_parent"
+            android:layout_height="13dp"
+            android:layout_marginTop="1dp"
+            android:textSize="11sp"
+            android:textColor="?attr/TextSingerColor"
+            android:fontFamily="@font/ys_display_medium"/>
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/trackButton"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="12dp"
+        android:src="@drawable/ic_agreement"
+        android:background="?attr/ButtonsColor"/>
+</LinearLayout>

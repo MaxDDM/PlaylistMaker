@@ -5,4 +5,6 @@
     <attr name="TextViewHeaderActivityColor" format="color" />
     <attr name="ButtonsColor" format="color" />
     <attr name="SearchTextColor" format="color" />
+    <attr name="TextViewTracksColor" format="color" />
+    <attr name="TextSingerColor" format="color" />
 </resources>

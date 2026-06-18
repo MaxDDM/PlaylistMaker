@@ -6,5 +6,7 @@
         <item name="TextViewHeaderActivityColor">@color/white</item>
         <item name="ButtonsColor">@color/black</item>
         <item name="SearchTextColor">@color/black</item>
+        <item name="TextViewTracksColor">@color/white</item>
+        <item name="TextSingerColor">@color/white</item>
     </style>
 </resources>
