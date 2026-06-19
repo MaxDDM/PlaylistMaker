@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:hint="@string/search"
-            android:textColorHint="?attr/SearchTextColor"
+            android:textColorHint="?attr/SearchHintTextColor"
             android:textColor="?attr/SearchTextColor"
             android:background="@null"
             android:textSize="16sp"

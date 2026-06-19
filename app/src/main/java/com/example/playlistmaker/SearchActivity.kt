@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.RecyclerView
+import android.view.inputmethod.InputMethodManager;
 
 class SearchActivity : AppCompatActivity() {
 
@@ -36,6 +37,12 @@ class SearchActivity : AppCompatActivity() {
 
         clearButton.setOnClickListener {
             searchField.setText("")
+
+            val view = this.currentFocus
+            if (view != null) {
+                val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(view.windowToken, 0)
+            }
         }
 
         val searchFieldTextWatcher = object : TextWatcher {
