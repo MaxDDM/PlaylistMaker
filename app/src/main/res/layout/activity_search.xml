@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:hint="@string/search"
-            android:textColorHint="?attr/SearchTextColor"
+            android:textColorHint="?attr/SearchHintTextColor"
             android:textColor="?attr/SearchTextColor"
             android:background="@null"
             android:textSize="16sp"
@@ -77,5 +77,12 @@
             android:layout_gravity="start"
             android:visibility="gone"/>
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/trackList"
+        android:layout_marginTop="24dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
 </LinearLayout>
