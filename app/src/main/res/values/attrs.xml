@@ -7,5 +7,6 @@
     <attr name="SearchHintTextColor" format="color" />
     <attr name="TextViewTracksColor" format="color" />
     <attr name="TextSingerColor" format="color" />
-    <attr name="SearchTextColor" format="color" />
+    <attr name="NoInternetButtonColor" format="color" />
+    <attr name="NoInternetButtonTextColor" format="color" />
 </resources>
