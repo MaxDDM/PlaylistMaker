@@ -54,6 +54,7 @@ class SearchActivity : AppCompatActivity() {
         val hintMessage = findViewById<NestedScrollView>(R.id.hintMessage)
         val mainList = findViewById<LinearLayout>(R.id.mainList)
         val clearHistoryButton = findViewById<Button>(R.id.clearHistoryButton)
+        val backFromSearchActivityButton = findViewById<ImageButton>(R.id.backFromSearchActivityButton)
         val trackHistoryRecyclerView = findViewById<RecyclerView>(R.id.storyTrackList)
         trackRecyclerView = findViewById(R.id.trackList)
         trackRecyclerView.adapter = trackAdapter
@@ -83,6 +84,8 @@ class SearchActivity : AppCompatActivity() {
                 mainList.visibility = View.VISIBLE
             }
         }
+
+        backFromSearchActivityButton.setOnClickListener { finish() }
 
         clearButton.setOnClickListener {
             searchField.setText("")
@@ -115,7 +118,7 @@ class SearchActivity : AppCompatActivity() {
 
                 if (searchField.hasFocus()) {
                     if (!history.isHistoryEmpty()) {
-                        if (p0?.isEmpty() ?: true) {
+                        if (p0?.isEmpty() != false) {
                             hintMessage.visibility = View.VISIBLE
                             mainList.visibility = View.GONE
                         } else {

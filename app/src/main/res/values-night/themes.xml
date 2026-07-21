@@ -10,5 +10,7 @@
         <item name="TextSingerColor">@color/white</item>
         <item name="SearchActivityButtonColor">@color/white</item>
         <item name="SearchActivityButtonTextColor">@color/black</item>
+        <item name="KnobColor">@color/blue</item>
+        <item name="TrackColor">@color/light_blue</item>
     </style>
 </resources>

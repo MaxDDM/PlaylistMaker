@@ -9,6 +9,8 @@ import com.google.gson.reflect.TypeToken
 class SearchHistory(val sharedPrefs : SharedPreferences) {
     private val savedTracks = loadTracks()
 
+    private val maxTracksCount = 10
+
     fun isHistoryEmpty() : Boolean {
         return savedTracks.isEmpty()
     }
@@ -17,7 +19,7 @@ class SearchHistory(val sharedPrefs : SharedPreferences) {
         if (savedTracks.find {it.trackId == track.trackId} != null) {
             savedTracks.removeAt(savedTracks.indexOfFirst { it.trackId == track.trackId })
         } else {
-            if (savedTracks.size == 10) {
+            if (savedTracks.size == maxTracksCount) {
                 savedTracks.removeAt(9)
             }
         }

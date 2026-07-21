@@ -9,4 +9,6 @@
     <attr name="TextSingerColor" format="color" />
     <attr name="SearchActivityButtonColor" format="color" />
     <attr name="SearchActivityButtonTextColor" format="color" />
+    <attr name="KnobColor" format="color" />
+    <attr name="TrackColor" format="color" />
 </resources>

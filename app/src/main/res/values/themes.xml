@@ -10,6 +10,8 @@
         <item name="TextSingerColor">@color/gray</item>
         <item name="SearchActivityButtonColor">@color/black</item>
         <item name="SearchActivityButtonTextColor">@color/white</item>
+        <item name="KnobColor">@color/gray</item>
+        <item name="TrackColor">@color/light_gray</item>
     </style>
 
     <style name="Theme.MainActivity" parent="Base.Theme.PlaylistMaker">
