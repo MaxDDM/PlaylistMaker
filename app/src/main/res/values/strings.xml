@@ -17,4 +17,6 @@
     <string name="retry">Обновить</string>
     <string name="no_internet">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
     <string name="no_music">Ничего не нашлось</string>
+    <string name="search_story_text">Вы искали</string>
+    <string name="clear_history_text">Очистить историю</string>
 </resources>

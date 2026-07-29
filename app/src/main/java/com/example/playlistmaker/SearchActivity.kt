@@ -1,5 +1,6 @@
 package com.example.playlistmaker
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,7 +16,9 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.widget.NestedScrollView
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -26,9 +29,15 @@ import retrofit2.Response
 class SearchActivity : AppCompatActivity() {
 
     private var currentText = ""
-
     private lateinit var trackRecyclerView : RecyclerView
-    private var trackAdapter = TrackAdapter(listOf())
+    private var trackAdapter = TrackAdapter(listOf()) { track ->
+        history.addTrack(track)
+        trackHistoryAdapter.notifyDataSetChanged()
+    }
+    private var trackHistoryAdapter = TrackAdapter(listOf()) { }
+    private lateinit var sharedPrefs : SharedPreferences
+    private lateinit var history : SearchHistory
+    private lateinit var listener: SharedPreferences.OnSharedPreferenceChangeListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,12 +51,41 @@ class SearchActivity : AppCompatActivity() {
 
         val clearButton = findViewById<ImageButton>(R.id.clearButton)
         val searchField = findViewById<EditText>(R.id.searchField)
+        val hintMessage = findViewById<NestedScrollView>(R.id.hintMessage)
+        val mainList = findViewById<LinearLayout>(R.id.mainList)
+        val clearHistoryButton = findViewById<Button>(R.id.clearHistoryButton)
+        val backFromSearchActivityButton = findViewById<ImageButton>(R.id.backFromSearchActivityButton)
+        val trackHistoryRecyclerView = findViewById<RecyclerView>(R.id.storyTrackList)
         trackRecyclerView = findViewById(R.id.trackList)
         trackRecyclerView.adapter = trackAdapter
+        trackHistoryRecyclerView.adapter = trackHistoryAdapter
+
+        sharedPrefs = getSharedPreferences("saved_tracks", MODE_PRIVATE)
+        history = SearchHistory(sharedPrefs)
+
+        trackHistoryAdapter.updateTracks(history.getTracks())
+
+        listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+            if (!history.isHistoryEmpty()) {
+                trackHistoryAdapter.notifyDataSetChanged()
+            }
+        }
 
         if (savedInstanceState != null) {
             searchField.setText(savedInstanceState.getString(SEARCH_FIELD_TEXT))
         }
+
+        searchField.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus && searchField.text.isEmpty() && !history.isHistoryEmpty()) {
+                hintMessage.visibility = View.VISIBLE
+                mainList.visibility = View.GONE
+            } else {
+                hintMessage.visibility = View.GONE
+                mainList.visibility = View.VISIBLE
+            }
+        }
+
+        backFromSearchActivityButton.setOnClickListener { finish() }
 
         clearButton.setOnClickListener {
             searchField.setText("")
@@ -58,7 +96,15 @@ class SearchActivity : AppCompatActivity() {
                 imm.hideSoftInputFromWindow(view.windowToken, 0)
             }
 
+            searchField.clearFocus()
+
             trackAdapter.updateTracks(listOf())
+        }
+
+        clearHistoryButton.setOnClickListener {
+            history.clearHistory()
+            hintMessage.visibility = View.GONE
+            mainList.visibility = View.VISIBLE
         }
 
         val searchFieldTextWatcher = object : TextWatcher {
@@ -69,6 +115,18 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 clearButton.visibility = clearButtonVisibility(p0)
                 currentText = p0.toString()
+
+                if (searchField.hasFocus()) {
+                    if (!history.isHistoryEmpty()) {
+                        if (p0?.isEmpty() != false) {
+                            hintMessage.visibility = View.VISIBLE
+                            mainList.visibility = View.GONE
+                        } else {
+                            hintMessage.visibility = View.GONE
+                            mainList.visibility = View.VISIBLE
+                        }
+                    }
+                }
             }
 
         }
@@ -94,8 +152,9 @@ class SearchActivity : AppCompatActivity() {
 
                 getTracks(searchField.text.toString())
                 true
+            } else {
+                false
             }
-            false
         }
     }
 

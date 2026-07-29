@@ -4,10 +4,14 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageButton
+import android.widget.Switch
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.content.edit
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,6 +28,24 @@ class SettingsActivity : AppCompatActivity() {
         val shareButton = findViewById<ImageButton>(R.id.shareButton)
         val supportButton = findViewById<ImageButton>(R.id.supportButton)
         val agreementButton = findViewById<ImageButton>(R.id.agreementButton)
+        val switchButton = findViewById<Switch>(R.id.switchButton)
+
+        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            switchButton.isChecked = true
+        } else {
+            switchButton.isChecked = false
+        }
+
+        switchButton.setOnCheckedChangeListener { switcher, checked ->
+            (applicationContext as App).switchTheme(checked)
+
+            val sharedPrefs = getSharedPreferences("themePreferences", MODE_PRIVATE)
+            if(checked) {
+                sharedPrefs.edit { putString("theme", "dark") }
+            } else {
+                sharedPrefs.edit { putString("theme", "notDark") }
+            }
+        }
 
         backButton.setOnClickListener { finish() }
 

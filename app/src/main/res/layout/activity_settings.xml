@@ -44,9 +44,11 @@
             style="@style/TextViewSettingsActivityStyle"/>
 
         <Switch
+            android:id="@+id/switchButton"
             style="@style/ImageButtonSettingsActivityStyle"
             android:thumb="@drawable/ic_knob"
             app:track="@drawable/ic_track"
+            android:trackTint="?attr/TrackColor"
             tools:ignore="UseSwitchCompatOrMaterialXml"
             android:checked="true"/>
     </FrameLayout>
