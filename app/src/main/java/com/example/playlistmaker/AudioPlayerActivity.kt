@@ -13,6 +13,8 @@ import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.Locale
+import java.time.Instant
+import java.time.ZoneOffset
 
 class AudioPlayerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +55,7 @@ class AudioPlayerActivity : AppCompatActivity() {
             year.visibility = View.GONE
             yearNumber.visibility = View.GONE
         } else {
-            yearNumber.text = track.releaseDate.toString()
+            yearNumber.text = Instant.parse(track.releaseDate).atZone(ZoneOffset.UTC).year.toString()
         }
 
         header.text = track.trackName
