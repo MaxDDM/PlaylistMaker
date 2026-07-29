@@ -3,7 +3,7 @@
     <style name="Base.Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="MainActivityBackgroundColor">@color/blue</item>
         <item name="ActivityBackgroundColor">@color/white</item>
-        <item name="TextViewHeaderActivityColor">@color/black</item>
+        <item name="TextViewActivityColor">@color/black</item>
         <item name="ButtonsColor">@color/white</item>
         <item name="SearchHintTextColor">@color/gray</item>
         <item name="TextViewTracksColor">@color/black</item>
@@ -12,6 +12,7 @@
         <item name="SearchActivityButtonTextColor">@color/white</item>
         <item name="KnobColor">@color/gray</item>
         <item name="TrackColor">@color/light_gray</item>
+        <item name="PlayButtonColor">@color/black</item>
     </style>
 
     <style name="Theme.MainActivity" parent="Base.Theme.PlaylistMaker">

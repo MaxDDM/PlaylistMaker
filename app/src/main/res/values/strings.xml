@@ -19,4 +19,9 @@
     <string name="no_music">Ничего не нашлось</string>
     <string name="search_story_text">Вы искали</string>
     <string name="clear_history_text">Очистить историю</string>
+    <string name="Length">Длительность</string>
+    <string name="Album">Альбом</string>
+    <string name="Year">Год</string>
+    <string name="Genre">Жанр</string>
+    <string name="Country">Страна</string>
 </resources>

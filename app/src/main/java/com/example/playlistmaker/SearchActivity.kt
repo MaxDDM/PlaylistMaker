@@ -1,5 +1,6 @@
 package com.example.playlistmaker
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
@@ -19,6 +20,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.widget.NestedScrollView
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -33,8 +35,12 @@ class SearchActivity : AppCompatActivity() {
     private var trackAdapter = TrackAdapter(listOf()) { track ->
         history.addTrack(track)
         trackHistoryAdapter.notifyDataSetChanged()
+
+        goToAudioPlayer(track)
     }
-    private var trackHistoryAdapter = TrackAdapter(listOf()) { }
+    private var trackHistoryAdapter = TrackAdapter(listOf()) { track ->
+        goToAudioPlayer(track)
+    }
     private lateinit var sharedPrefs : SharedPreferences
     private lateinit var history : SearchHistory
     private lateinit var listener: SharedPreferences.OnSharedPreferenceChangeListener
@@ -227,6 +233,15 @@ class SearchActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    private fun goToAudioPlayer(track: Track) {
+        val intent = Intent(this@SearchActivity, AudioPlayerActivity::class.java)
+
+        val jsonString = Gson().toJson(track)
+        intent.putExtra("track", jsonString)
+
+        startActivity(intent)
     }
 
     companion object {
