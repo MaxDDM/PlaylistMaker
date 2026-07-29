@@ -51,7 +51,7 @@ class AudioPlayerActivity : AppCompatActivity() {
             albumName.text = track.collectionName
         }
 
-        if (track.releaseDate == null) {
+        if (track.releaseDate.isNullOrEmpty()) {
             year.visibility = View.GONE
             yearNumber.visibility = View.GONE
         } else {
