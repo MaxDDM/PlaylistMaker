@@ -42,7 +42,7 @@
             app:layout_constraintBottom_toTopOf="@id/horizontal_guideline"
             android:layout_marginTop="4dp"/>
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/cover"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -51,7 +51,8 @@
             app:layout_constraintTop_toTopOf="@id/horizontal_guideline"
             app:layout_constraintStart_toEndOf="@id/left_guideline"
             app:layout_constraintEnd_toStartOf="@id/right_guideline"
-            android:layout_marginTop="30dp"/>
+            android:layout_marginTop="30dp"
+            app:shapeAppearanceOverlay="@style/RoundedAudioImage"/>
 
         <TextView
             android:id="@+id/header"
@@ -87,7 +88,7 @@
             android:src="@drawable/ic_album"
             app:layout_constraintStart_toEndOf="@+id/left_guideline"
             app:layout_constraintTop_toBottomOf="@+id/group"
-            android:layout_marginTop="54dp"/>
+            android:layout_marginTop="54dp" />
 
         <ImageButton
             android:id="@+id/likeButton"
