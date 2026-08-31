@@ -2,7 +2,7 @@
 <resources>
     <attr name="MainActivityBackgroundColor" format="color" />
     <attr name="ActivityBackgroundColor" format="color" />
-    <attr name="TextViewHeaderActivityColor" format="color" />
+    <attr name="TextViewActivityColor" format="color" />
     <attr name="ButtonsColor" format="color" />
     <attr name="SearchHintTextColor" format="color" />
     <attr name="TextViewTracksColor" format="color" />
@@ -11,4 +11,5 @@
     <attr name="SearchActivityButtonTextColor" format="color" />
     <attr name="KnobColor" format="color" />
     <attr name="TrackColor" format="color" />
+    <attr name="PlayButtonColor" format="color" />
 </resources>
