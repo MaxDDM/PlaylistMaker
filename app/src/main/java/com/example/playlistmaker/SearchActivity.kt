@@ -3,6 +3,8 @@ package com.example.playlistmaker
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -18,6 +20,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.widget.NestedScrollView
 import com.google.gson.Gson
@@ -33,17 +36,29 @@ class SearchActivity : AppCompatActivity() {
     private var currentText = ""
     private lateinit var trackRecyclerView : RecyclerView
     private var trackAdapter = TrackAdapter(listOf()) { track ->
-        history.addTrack(track)
-        trackHistoryAdapter.notifyDataSetChanged()
+        if (clickDebounce()) {
+            history.addTrack(track)
+            trackHistoryAdapter.notifyDataSetChanged()
 
-        goToAudioPlayer(track)
+            goToAudioPlayer(track)
+        }
     }
     private var trackHistoryAdapter = TrackAdapter(listOf()) { track ->
-        goToAudioPlayer(track)
+        if (clickDebounce()) {
+            goToAudioPlayer(track)
+        }
     }
     private lateinit var sharedPrefs : SharedPreferences
     private lateinit var history : SearchHistory
     private lateinit var listener: SharedPreferences.OnSharedPreferenceChangeListener
+    private lateinit var searchField: EditText
+    private lateinit var progressBar: ProgressBar
+    private val handler = Handler(Looper.getMainLooper())
+    private var isClickAllowed = true
+    private val searchRunnable = Runnable {
+        prepareForSearch()
+        getTracks(searchField.text.toString())
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,12 +71,13 @@ class SearchActivity : AppCompatActivity() {
         }
 
         val clearButton = findViewById<ImageButton>(R.id.clearButton)
-        val searchField = findViewById<EditText>(R.id.searchField)
+        searchField = findViewById(R.id.searchField)
         val hintMessage = findViewById<NestedScrollView>(R.id.hintMessage)
         val mainList = findViewById<LinearLayout>(R.id.mainList)
         val clearHistoryButton = findViewById<Button>(R.id.clearHistoryButton)
         val backFromSearchActivityButton = findViewById<ImageButton>(R.id.backFromSearchActivityButton)
         val trackHistoryRecyclerView = findViewById<RecyclerView>(R.id.storyTrackList)
+        progressBar = findViewById(R.id.progressBar)
         trackRecyclerView = findViewById(R.id.trackList)
         trackRecyclerView.adapter = trackAdapter
         trackHistoryRecyclerView.adapter = trackHistoryAdapter
@@ -133,6 +149,10 @@ class SearchActivity : AppCompatActivity() {
                         }
                     }
                 }
+
+                if (!p0.isNullOrEmpty()) {
+                    searchDebounce()
+                }
             }
 
         }
@@ -141,20 +161,7 @@ class SearchActivity : AppCompatActivity() {
 
         searchField.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                trackAdapter.updateTracks(listOf())
-                trackRecyclerView.visibility = View.VISIBLE
-
-                val noMusicPic = findViewById<ImageView>(R.id.noMusicImg)
-                val noMusicText = findViewById<TextView>(R.id.noMusicText)
-                val noInternetPic = findViewById<ImageView>(R.id.noInternetImg)
-                val noInternetText = findViewById<TextView>(R.id.noInternetText)
-                val noInternetButton = findViewById<Button>(R.id.noInternetButton)
-
-                noMusicPic.visibility = View.GONE
-                noMusicText.visibility = View.GONE
-                noInternetPic.visibility = View.GONE
-                noInternetText.visibility = View.GONE
-                noInternetButton.visibility = View.GONE
+                prepareForSearch()
 
                 getTracks(searchField.text.toString())
                 true
@@ -178,6 +185,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showNoInternetObj(text : String) {
+        progressBar.visibility = View.GONE
         trackRecyclerView.visibility = View.GONE
 
         val noInternetPic = findViewById<ImageView>(R.id.noInternetImg)
@@ -198,6 +206,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showNoMusicObj() {
+        progressBar.visibility = View.GONE
         trackRecyclerView.visibility = View.GONE
 
         val noMusicPic = findViewById<ImageView>(R.id.noMusicImg)
@@ -205,6 +214,11 @@ class SearchActivity : AppCompatActivity() {
 
         noMusicPic.visibility = View.VISIBLE
         noMusicText.visibility= View.VISIBLE
+    }
+
+    private fun showTracks(tracks: List<Track>?) {
+        progressBar.visibility = View.GONE
+        trackAdapter.updateTracks(tracks)
     }
 
     private fun getTracks(text : String) {
@@ -219,7 +233,7 @@ class SearchActivity : AppCompatActivity() {
             override fun onResponse(call : Call<TracksResponse>, response : Response<TracksResponse>) {
                 if (response.code() == 200) {
                     if (response.body()?.results?.isNotEmpty() == true) {
-                        trackAdapter.updateTracks(response.body()?.results)
+                        showTracks(response.body()?.results)
                     } else {
                         showNoMusicObj()
                     }
@@ -244,7 +258,42 @@ class SearchActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
+    private fun prepareForSearch() {
+        trackAdapter.updateTracks(listOf())
+        trackRecyclerView.visibility = View.VISIBLE
+
+        val noMusicPic = findViewById<ImageView>(R.id.noMusicImg)
+        val noMusicText = findViewById<TextView>(R.id.noMusicText)
+        val noInternetPic = findViewById<ImageView>(R.id.noInternetImg)
+        val noInternetText = findViewById<TextView>(R.id.noInternetText)
+        val noInternetButton = findViewById<Button>(R.id.noInternetButton)
+
+        noMusicPic.visibility = View.GONE
+        noMusicText.visibility = View.GONE
+        noInternetPic.visibility = View.GONE
+        noInternetText.visibility = View.GONE
+        noInternetButton.visibility = View.GONE
+
+        progressBar.visibility = View.VISIBLE
+    }
+
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+
     companion object {
         const val SEARCH_FIELD_TEXT = "SEARCH_FIELD_TEXT"
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }
