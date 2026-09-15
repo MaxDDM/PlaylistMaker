@@ -25,11 +25,11 @@ import android.widget.TextView
 import androidx.core.widget.NestedScrollView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.presentation.api.Presenter
+import com.example.playlistmaker.presentation.api.TracksPresenter
 import com.example.playlistmaker.presentation.common.adapter.tracks_adapter.TrackAdapter
-import com.example.playlistmaker.presentation.impl.PresenterImpl
+import com.example.playlistmaker.presentation.impl.HistoryPresenterImpl
+import com.example.playlistmaker.presentation.impl.TracksPresenterImpl
 import com.google.gson.Gson
-import java.net.UnknownHostException
 import kotlin.jvm.java
 
 class SearchActivity : AppCompatActivity() {
@@ -38,7 +38,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var trackRecyclerView : RecyclerView
     private var trackAdapter = TrackAdapter(listOf()) { track ->
         if (clickDebounce()) {
-            presenter.addTrackToHistory(track)
+            historyPresenter.addTrackToHistory(track)
             trackHistoryAdapter.notifyDataSetChanged()
 
             goToAudioPlayer(track)
@@ -49,7 +49,6 @@ class SearchActivity : AppCompatActivity() {
             goToAudioPlayer(track)
         }
     }
-    private val sharedPrefs by lazy { getSharedPreferences("saved_tracks", MODE_PRIVATE) }
     private lateinit var listener: SharedPreferences.OnSharedPreferenceChangeListener
     private lateinit var searchField: EditText
     private lateinit var progressBar: ProgressBar
@@ -61,7 +60,8 @@ class SearchActivity : AppCompatActivity() {
         prepareForSearch()
         getTracks(searchField.text.toString())
     }
-    private val presenter by lazy { PresenterImpl(sharedPrefs) }
+    private val tracksPresenter = TracksPresenterImpl()
+    private val historyPresenter by lazy { HistoryPresenterImpl(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,10 +87,10 @@ class SearchActivity : AppCompatActivity() {
         trackRecyclerView.adapter = trackAdapter
         trackHistoryRecyclerView.adapter = trackHistoryAdapter
 
-        trackHistoryAdapter.updateTracks(presenter.getTracksFromHistory())
+        trackHistoryAdapter.updateTracks(historyPresenter.getTracksFromHistory())
 
         listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-            if (!presenter.isHistoryEmpty()) {
+            if (!historyPresenter.isHistoryEmpty()) {
                 trackHistoryAdapter.notifyDataSetChanged()
             }
         }
@@ -100,7 +100,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         searchField.setOnFocusChangeListener { view, hasFocus ->
-            if (hasFocus && searchField.text.isEmpty() && !presenter.isHistoryEmpty()) {
+            if (hasFocus && searchField.text.isEmpty() && !historyPresenter.isHistoryEmpty()) {
                 hintMessage.visibility = View.VISIBLE
                 mainList.visibility = View.GONE
             } else {
@@ -126,7 +126,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         clearHistoryButton.setOnClickListener {
-            presenter.clearHistory()
+            historyPresenter.clearHistory()
             hintMessage.visibility = View.GONE
             mainList.visibility = View.VISIBLE
         }
@@ -141,7 +141,7 @@ class SearchActivity : AppCompatActivity() {
                 currentText = p0.toString()
 
                 if (searchField.hasFocus()) {
-                    if (!presenter.isHistoryEmpty()) {
+                    if (!historyPresenter.isHistoryEmpty()) {
                         if (p0?.isEmpty() != false) {
                             hintMessage.visibility = View.VISIBLE
                             mainList.visibility = View.GONE
@@ -225,7 +225,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun getTracks(expression : String) {
-        val myConsumer = object : Presenter.TracksConsumer {
+        val myConsumer = object : TracksPresenter.TracksConsumer {
             override fun consume(foundTracks: List<Track>) {
 
                 if (foundTracks.isEmpty()) {
@@ -247,7 +247,7 @@ class SearchActivity : AppCompatActivity() {
 
         }
 
-        presenter.searchTracks(expression, myConsumer)
+        tracksPresenter.searchTracks(expression, myConsumer)
     }
 
     private fun goToAudioPlayer(track: Track) {

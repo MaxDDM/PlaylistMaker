@@ -1,5 +1,7 @@
 package com.example.playlistmaker
 
+import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.example.playlistmaker.data.impl.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.data.impl.ThemeRepositoryImpl
@@ -32,11 +34,11 @@ object Creator {
         return TracksInteractorImpl(getTracksRepository())
     }
 
-    fun provideSearchHistoryInteractor(sharedPrefs : SharedPreferences) : SearchHistoryInteractor {
-        return SearchHistoryInteractorImpl(getSearchHistoryRepository(sharedPrefs))
+    fun provideSearchHistoryInteractor(context: Context) : SearchHistoryInteractor {
+        return SearchHistoryInteractorImpl(getSearchHistoryRepository(context.getSharedPreferences("saved_tracks", MODE_PRIVATE)))
     }
 
-    fun provideThemeInteractor(sharedPrefs: SharedPreferences) : ThemeInteractor {
-        return ThemeInteractorImpl(getThemeRepository(sharedPrefs))
+    fun provideThemeInteractor(context: Context) : ThemeInteractor {
+        return ThemeInteractorImpl(getThemeRepository(context.getSharedPreferences("themePreferences", MODE_PRIVATE)))
     }
 }

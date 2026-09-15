@@ -10,14 +10,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.content.edit
 import com.example.playlistmaker.R
 import com.example.playlistmaker.presentation.common.app.App
-import com.example.playlistmaker.presentation.impl.PresenterImpl
+import com.example.playlistmaker.presentation.impl.ThemePresenterImpl
+import com.example.playlistmaker.presentation.impl.TracksPresenterImpl
 
 class SettingsActivity : AppCompatActivity() {
-    private val sharedPrefs by lazy { getSharedPreferences("themePreferences", MODE_PRIVATE) }
-    private val presenter by lazy { PresenterImpl(sharedPrefs) }
+    private val themePresenter by lazy { ThemePresenterImpl(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,9 +44,9 @@ class SettingsActivity : AppCompatActivity() {
             (applicationContext as App).switchTheme(checked)
 
             if(checked) {
-                presenter.setTheme("dark")
+                themePresenter.setTheme("dark")
             } else {
-                presenter.setTheme("notDark")
+                themePresenter.setTheme("notDark")
             }
         }
 

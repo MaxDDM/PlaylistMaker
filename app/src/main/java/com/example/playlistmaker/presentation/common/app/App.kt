@@ -6,8 +6,7 @@ import com.example.playlistmaker.Creator
 
 class App : Application() {
     private var darkTheme = false
-    private val sharedPrefs by lazy { getSharedPreferences("themePreferences", MODE_PRIVATE) }
-    private val themeInteractor by lazy { Creator.provideThemeInteractor(sharedPrefs) }
+    private val themeInteractor by lazy { Creator.provideThemeInteractor(this) }
 
     override fun onCreate() {
         super.onCreate()
