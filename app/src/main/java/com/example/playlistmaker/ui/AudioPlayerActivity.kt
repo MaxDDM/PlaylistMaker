@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui
 
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.models.Track
 import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -91,11 +93,12 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         header.text = track.trackName
         group.text = track.artistName
-        lengthTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTime)
+        lengthTime.text = track.trackTime
         genreName.text = track.primaryGenreName
         countryName.text = track.country
 
-        Glide.with(this).load(track.artworkUrl100.replaceAfterLast('/',"512x512bb.jpg")).placeholder(R.drawable.ic_audio_placeholder).into(cover)
+        Glide.with(this).load(track.artworkUrl100.replaceAfterLast('/',"512x512bb.jpg")).placeholder(
+            R.drawable.ic_audio_placeholder).into(cover)
     }
 
     override fun onPause() {

@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -23,13 +23,14 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.widget.NestedScrollView
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.presentation.api.Presenter
+import com.example.playlistmaker.presentation.common.adapter.tracks_adapter.TrackAdapter
+import com.example.playlistmaker.presentation.impl.PresenterImpl
 import com.google.gson.Gson
-import retrofit2.Call
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import java.net.UnknownHostException
 import kotlin.jvm.java
-import retrofit2.Callback
-import retrofit2.Response
 
 class SearchActivity : AppCompatActivity() {
 
@@ -37,7 +38,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var trackRecyclerView : RecyclerView
     private var trackAdapter = TrackAdapter(listOf()) { track ->
         if (clickDebounce()) {
-            history.addTrack(track)
+            presenter.addTrackToHistory(track)
             trackHistoryAdapter.notifyDataSetChanged()
 
             goToAudioPlayer(track)
@@ -48,17 +49,19 @@ class SearchActivity : AppCompatActivity() {
             goToAudioPlayer(track)
         }
     }
-    private lateinit var sharedPrefs : SharedPreferences
-    private lateinit var history : SearchHistory
+    private val sharedPrefs by lazy { getSharedPreferences("saved_tracks", MODE_PRIVATE) }
     private lateinit var listener: SharedPreferences.OnSharedPreferenceChangeListener
     private lateinit var searchField: EditText
     private lateinit var progressBar: ProgressBar
+    private lateinit var noMusicPic : ImageView
+    private lateinit var noMusicText: TextView
     private val handler = Handler(Looper.getMainLooper())
     private var isClickAllowed = true
     private val searchRunnable = Runnable {
         prepareForSearch()
         getTracks(searchField.text.toString())
     }
+    private val presenter by lazy { PresenterImpl(sharedPrefs) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,17 +81,16 @@ class SearchActivity : AppCompatActivity() {
         val backFromSearchActivityButton = findViewById<ImageButton>(R.id.backFromSearchActivityButton)
         val trackHistoryRecyclerView = findViewById<RecyclerView>(R.id.storyTrackList)
         progressBar = findViewById(R.id.progressBar)
+        noMusicPic = findViewById(R.id.noMusicImg)
+        noMusicText = findViewById(R.id.noMusicText)
         trackRecyclerView = findViewById(R.id.trackList)
         trackRecyclerView.adapter = trackAdapter
         trackHistoryRecyclerView.adapter = trackHistoryAdapter
 
-        sharedPrefs = getSharedPreferences("saved_tracks", MODE_PRIVATE)
-        history = SearchHistory(sharedPrefs)
-
-        trackHistoryAdapter.updateTracks(history.getTracks())
+        trackHistoryAdapter.updateTracks(presenter.getTracksFromHistory())
 
         listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-            if (!history.isHistoryEmpty()) {
+            if (!presenter.isHistoryEmpty()) {
                 trackHistoryAdapter.notifyDataSetChanged()
             }
         }
@@ -98,7 +100,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         searchField.setOnFocusChangeListener { view, hasFocus ->
-            if (hasFocus && searchField.text.isEmpty() && !history.isHistoryEmpty()) {
+            if (hasFocus && searchField.text.isEmpty() && !presenter.isHistoryEmpty()) {
                 hintMessage.visibility = View.VISIBLE
                 mainList.visibility = View.GONE
             } else {
@@ -124,7 +126,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         clearHistoryButton.setOnClickListener {
-            history.clearHistory()
+            presenter.clearHistory()
             hintMessage.visibility = View.GONE
             mainList.visibility = View.VISIBLE
         }
@@ -139,10 +141,12 @@ class SearchActivity : AppCompatActivity() {
                 currentText = p0.toString()
 
                 if (searchField.hasFocus()) {
-                    if (!history.isHistoryEmpty()) {
+                    if (!presenter.isHistoryEmpty()) {
                         if (p0?.isEmpty() != false) {
                             hintMessage.visibility = View.VISIBLE
                             mainList.visibility = View.GONE
+                            noMusicPic.visibility = View.GONE
+                            noMusicText.visibility= View.GONE
                         } else {
                             hintMessage.visibility = View.GONE
                             mainList.visibility = View.VISIBLE
@@ -209,11 +213,10 @@ class SearchActivity : AppCompatActivity() {
         progressBar.visibility = View.GONE
         trackRecyclerView.visibility = View.GONE
 
-        val noMusicPic = findViewById<ImageView>(R.id.noMusicImg)
-        val noMusicText = findViewById<TextView>(R.id.noMusicText)
-
-        noMusicPic.visibility = View.VISIBLE
-        noMusicText.visibility= View.VISIBLE
+        if (!currentText.isNullOrEmpty()) {
+            noMusicPic.visibility = View.VISIBLE
+            noMusicText.visibility = View.VISIBLE
+        }
     }
 
     private fun showTracks(tracks: List<Track>?) {
@@ -221,32 +224,30 @@ class SearchActivity : AppCompatActivity() {
         trackAdapter.updateTracks(tracks)
     }
 
-    private fun getTracks(text : String) {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://itunes.apple.com")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+    private fun getTracks(expression : String) {
+        val myConsumer = object : Presenter.TracksConsumer {
+            override fun consume(foundTracks: List<Track>) {
 
-        val itunesService = retrofit.create(ITunesAPI::class.java)
-
-        itunesService.getTracks(text).enqueue(object : Callback<TracksResponse> {
-            override fun onResponse(call : Call<TracksResponse>, response : Response<TracksResponse>) {
-                if (response.code() == 200) {
-                    if (response.body()?.results?.isNotEmpty() == true) {
-                        showTracks(response.body()?.results)
-                    } else {
+                if (foundTracks.isEmpty()) {
+                    handler.post {
                         showNoMusicObj()
                     }
                 } else {
-                    showNoInternetObj(text)
+                    handler.post {
+                        showTracks(foundTracks)
+                    }
                 }
             }
 
-            override fun onFailure(call: Call<TracksResponse?>?, t: Throwable?) {
-                showNoInternetObj(text)
+            override fun onError(t: Throwable) {
+                handler.post {
+                    showNoInternetObj(expression)
+                }
             }
 
-        })
+        }
+
+        presenter.searchTracks(expression, myConsumer)
     }
 
     private fun goToAudioPlayer(track: Track) {

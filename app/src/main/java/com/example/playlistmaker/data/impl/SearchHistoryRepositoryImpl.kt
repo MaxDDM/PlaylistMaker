@@ -1,21 +1,22 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.data.impl
 
-
-import androidx.core.content.edit
 import android.content.SharedPreferences
+import androidx.core.content.edit
+import com.example.playlistmaker.domain.api.repositories.SearchHistoryRepository
+import com.example.playlistmaker.domain.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class SearchHistory(val sharedPrefs : SharedPreferences) {
+class SearchHistoryRepositoryImpl(val sharedPrefs : SharedPreferences) : SearchHistoryRepository() {
     private val savedTracks = loadTracks()
 
     private val maxTracksCount = 10
 
-    fun isHistoryEmpty() : Boolean {
+    override fun isHistoryEmpty(): Boolean {
         return savedTracks.isEmpty()
     }
 
-    fun addTrack(track : Track) {
+    override fun addTrack(track: Track) {
         if (savedTracks.find {it.trackId == track.trackId} != null) {
             savedTracks.removeAt(savedTracks.indexOfFirst { it.trackId == track.trackId })
         } else {
@@ -31,7 +32,7 @@ class SearchHistory(val sharedPrefs : SharedPreferences) {
         }
     }
 
-    fun loadTracks() : MutableList<Track> {
+    override fun loadTracks(): MutableList<Track> {
         val trackListType = object : TypeToken<MutableList<Track>>() {}.type
         var tracks = Gson().fromJson<MutableList<Track>>(sharedPrefs.getString("saved_tracks", ""), trackListType)
 
@@ -41,11 +42,11 @@ class SearchHistory(val sharedPrefs : SharedPreferences) {
         return tracks
     }
 
-    fun getTracks() : MutableList<Track> {
+    override fun getTracks(): MutableList<Track> {
         return savedTracks
     }
 
-    fun clearHistory() {
+    override fun clearHistory() {
         savedTracks.clear()
         sharedPrefs.edit { remove("saved_tracks") }
     }
