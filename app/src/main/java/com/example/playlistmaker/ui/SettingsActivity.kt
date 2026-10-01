@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui
 
 import android.content.Intent
 import android.net.Uri
@@ -8,12 +8,16 @@ import android.widget.Switch
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.content.edit
+import com.example.playlistmaker.R
+import com.example.playlistmaker.presentation.common.app.App
+import com.example.playlistmaker.presentation.impl.ThemePresenterImpl
+import com.example.playlistmaker.presentation.impl.TracksPresenterImpl
 
 class SettingsActivity : AppCompatActivity() {
+    private val themePresenter by lazy { ThemePresenterImpl(this) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -39,11 +43,10 @@ class SettingsActivity : AppCompatActivity() {
         switchButton.setOnCheckedChangeListener { switcher, checked ->
             (applicationContext as App).switchTheme(checked)
 
-            val sharedPrefs = getSharedPreferences("themePreferences", MODE_PRIVATE)
             if(checked) {
-                sharedPrefs.edit { putString("theme", "dark") }
+                themePresenter.setTheme("dark")
             } else {
-                sharedPrefs.edit { putString("theme", "notDark") }
+                themePresenter.setTheme("notDark")
             }
         }
 
