@@ -38,7 +38,7 @@ class SettingsActivity : AppCompatActivity() {
         val agreementButton = findViewById<ImageButton>(R.id.agreementButton)
         val switchButton = findViewById<Switch>(R.id.switchButton)
 
-        viewModel = ViewModelProvider(this, ThemeViewModel.getFactory(this)).get(ThemeViewModel::class.java)
+        viewModel = ViewModelProvider(this, ThemeViewModel.getFactory(applicationContext)).get(ThemeViewModel::class.java)
 
         viewModel.observeTheme().observe(this) {
             if (it == null) {

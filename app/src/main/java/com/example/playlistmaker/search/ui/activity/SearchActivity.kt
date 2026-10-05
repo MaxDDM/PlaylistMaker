@@ -91,7 +91,7 @@ class SearchActivity : AppCompatActivity() {
         trackRecyclerView.adapter = trackAdapter
         trackHistoryRecyclerView.adapter = trackHistoryAdapter
 
-        historyViewModel = ViewModelProvider(this, HistoryViewModel.getFactory(this)).get(HistoryViewModel::class.java)
+        historyViewModel = ViewModelProvider(this, HistoryViewModel.getFactory(applicationContext)).get(HistoryViewModel::class.java)
         tracksViewModel = ViewModelProvider(this, TracksViewModel.getFactory()).get(TracksViewModel::class.java)
 
         historyViewModel.observeHistory().observe(this) {
