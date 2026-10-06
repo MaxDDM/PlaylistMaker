@@ -1,9 +1,7 @@
 package com.example.playlistmaker.player.ui.activity
 
-import android.media.MediaPlayer
+
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -18,13 +16,17 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.player.ui.view_model.PlayerViewModel
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
-import java.text.SimpleDateFormat
+import org.koin.android.ext.android.getKoin
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import java.time.Instant
 import java.time.ZoneOffset
-import java.util.Locale
 
-class AudioPlayerActivity : AppCompatActivity() {
-    private lateinit var viewModel: PlayerViewModel
+class AudioPlayerActivity() : AppCompatActivity() {
+    private var url = ""
+    private val viewModel: PlayerViewModel by viewModel {
+        parametersOf(url)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,10 +57,10 @@ class AudioPlayerActivity : AppCompatActivity() {
         backButton.setOnClickListener { finish() }
 
         val jsonString = intent.getStringExtra("track")
-        val track = Gson().fromJson(jsonString, Track::class.java)
+        val gson: Gson = getKoin().get()
+        val track = gson.fromJson(jsonString, Track::class.java)
 
-        viewModel = ViewModelProvider(this, PlayerViewModel.getFactory(track.previewUrl))
-            .get(PlayerViewModel::class.java)
+        url = track.previewUrl
 
         viewModel.observeProgressTime().observe(this) {
             time.text = it
