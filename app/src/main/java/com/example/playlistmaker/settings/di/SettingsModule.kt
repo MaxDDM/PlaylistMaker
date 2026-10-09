@@ -12,7 +12,6 @@ import android.content.Context
 import com.example.playlistmaker.settings.data.StorageClient
 import com.example.playlistmaker.settings.data.storage.PrefsStorageClient
 import com.example.playlistmaker.settings.ui.view_model.ThemeViewModel
-import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
