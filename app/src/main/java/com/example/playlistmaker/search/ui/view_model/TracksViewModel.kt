@@ -6,25 +6,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.creator.Creator
-import com.example.playlistmaker.player.ui.view_model.PlayerViewModel
-import com.example.playlistmaker.player.ui.view_model.PlayerViewModel.Companion.STATE_DEFAULT
 import com.example.playlistmaker.search.domain.api.interactors.TracksInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.view_model.utils.Resource
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class TracksViewModel : ViewModel(){
-    companion object {
-        fun getFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                TracksViewModel()
-            }
-        }
-    }
+class TracksViewModel(private val tracksInteractor: TracksInteractor) : ViewModel() {
     private val tracksLiveData: MutableLiveData<Resource<List<Track>>> = MutableLiveData(Resource.Default())
     fun observeTracks(): LiveData<Resource<List<Track>>> = tracksLiveData
-    private val tracksInteractor = Creator.provideTracksInteractor()
-
     fun searchTracks(expression: String) {
         if (expression.isNotEmpty()) {
             tracksLiveData.postValue(Resource.Loading())
