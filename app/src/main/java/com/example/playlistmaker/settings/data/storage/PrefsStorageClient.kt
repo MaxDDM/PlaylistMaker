@@ -4,12 +4,11 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.example.playlistmaker.settings.data.StorageClient
 import com.google.gson.Gson
-import java.lang.reflect.Type
 import androidx.core.content.edit
+import java.lang.reflect.Type
 
-class PrefsStorageClient<T>(private val fileName: String, private val context: Context, private val dataKey: String, private val type: Type) : StorageClient<T> {
+class PrefsStorageClient<T>(private val fileName: String, private val context: Context, private val dataKey: String, private val type: Type?, private val gson: Gson) : StorageClient<T> {
     private val prefs: SharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE)
-    private val gson = Gson()
 
     override fun storeData(data: T) {
         prefs.edit { putString(dataKey, gson.toJson(data, type)) }

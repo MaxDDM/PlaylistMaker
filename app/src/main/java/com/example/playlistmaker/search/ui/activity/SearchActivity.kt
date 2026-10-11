@@ -34,6 +34,7 @@ import com.example.playlistmaker.search.ui.common.adapter.track_adapter.TrackVie
 import com.example.playlistmaker.search.ui.view_model.TracksViewModel
 import com.example.playlistmaker.search.ui.view_model.utils.Resource
 import com.google.gson.Gson
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
@@ -62,8 +63,8 @@ class SearchActivity : AppCompatActivity() {
     private val searchRunnable = Runnable {
         tracksViewModel.searchTracks(searchField.text.toString())
     }
-    private lateinit var tracksViewModel : TracksViewModel
-    private lateinit var historyViewModel : HistoryViewModel
+    private val tracksViewModel : TracksViewModel by viewModel()
+    private val historyViewModel : HistoryViewModel by viewModel()
 
     private var isHistoryEmpty = true
 
@@ -90,9 +91,6 @@ class SearchActivity : AppCompatActivity() {
         trackRecyclerView = findViewById(R.id.trackList)
         trackRecyclerView.adapter = trackAdapter
         trackHistoryRecyclerView.adapter = trackHistoryAdapter
-
-        historyViewModel = ViewModelProvider(this, HistoryViewModel.getFactory(applicationContext)).get(HistoryViewModel::class.java)
-        tracksViewModel = ViewModelProvider(this, TracksViewModel.getFactory()).get(TracksViewModel::class.java)
 
         historyViewModel.observeHistory().observe(this) {
             if (!it.isNullOrEmpty()) {

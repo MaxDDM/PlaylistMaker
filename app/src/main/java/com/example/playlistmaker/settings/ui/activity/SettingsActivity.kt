@@ -16,9 +16,11 @@ import com.example.playlistmaker.player.ui.view_model.PlayerViewModel
 import com.example.playlistmaker.search.ui.view_model.utils.Resource
 import com.example.playlistmaker.settings.ui.common.app.App
 import com.example.playlistmaker.settings.ui.view_model.ThemeViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class SettingsActivity : AppCompatActivity() {
-    private lateinit var viewModel: ThemeViewModel
+    private val viewModel: ThemeViewModel by viewModel()
 
     private var currTheme: Boolean = false
 
@@ -37,8 +39,6 @@ class SettingsActivity : AppCompatActivity() {
         val supportButton = findViewById<ImageButton>(R.id.supportButton)
         val agreementButton = findViewById<ImageButton>(R.id.agreementButton)
         val switchButton = findViewById<Switch>(R.id.switchButton)
-
-        viewModel = ViewModelProvider(this, ThemeViewModel.getFactory(applicationContext)).get(ThemeViewModel::class.java)
 
         viewModel.observeTheme().observe(this) {
             if (it == null) {

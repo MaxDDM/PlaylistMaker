@@ -45,4 +45,5 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.12.0")
     implementation("com.google.code.gson:gson:2.11.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
+    implementation("io.insert-koin:koin-android:3.3.0")
 }

@@ -4,9 +4,12 @@ import android.content.Context
 import com.google.gson.reflect.TypeToken
 import com.example.playlistmaker.settings.data.storage.PrefsStorageClient
 import com.example.playlistmaker.settings.domain.api.repositories.ThemeRepository
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.core.parameter.parametersOf
+import kotlin.getValue
 
-class ThemeRepositoryImpl(context: Context) : ThemeRepository {
-    private val storage = PrefsStorageClient<Boolean>("themePreferences", context, "theme", object : TypeToken<Boolean>() {}.type)
+class ThemeRepositoryImpl(private val storage: PrefsStorageClient<Boolean>) : ThemeRepository, KoinComponent {
 
     override fun getTheme(): Boolean? {
         return storage.getData()
