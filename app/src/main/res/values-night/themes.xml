@@ -13,5 +13,7 @@
         <item name="KnobColor">@color/blue</item>
         <item name="TrackColor">@color/light_blue</item>
         <item name="PlayButtonColor">@color/white</item>
+        <item name="FragmentsTextColor">@color/white</item>
+        <item name="TabIndicatorColor">@color/white</item>
     </style>
 </resources>

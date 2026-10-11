@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="?attr/ActivityBackgroundColor">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="24dp"
+        app:cornerRadius="54dp"
+        android:backgroundTint="?attr/SearchActivityButtonColor"
+        android:textColor="?attr/SearchActivityButtonTextColor"
+        android:textSize="14sp"
+        android:fontFamily="@font/ys_display_medium"
+        android:text="@string/new_playlist"
+        android:textAllCaps="false"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="46dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/ic_no_media"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/no_playlists"
+        android:fontFamily="@font/ys_display_medium"
+        android:textSize="19sp"
+        android:textColor="?attr/FragmentsTextColor"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center"/>
+
+</LinearLayout>

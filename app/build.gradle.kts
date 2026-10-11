@@ -46,4 +46,6 @@ dependencies {
     implementation("com.google.code.gson:gson:2.11.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
     implementation("io.insert-koin:koin-android:3.3.0")
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
+    implementation("com.google.android.material:material:1.8.0")
 }

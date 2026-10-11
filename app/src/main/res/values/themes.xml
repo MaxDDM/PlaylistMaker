@@ -13,6 +13,8 @@
         <item name="KnobColor">@color/gray</item>
         <item name="TrackColor">@color/light_gray</item>
         <item name="PlayButtonColor">@color/black</item>
+        <item name="FragmentsTextColor">@color/black2</item>
+        <item name="TabIndicatorColor">@color/black</item>
     </style>
 
     <style name="Theme.MainActivity" parent="Base.Theme.PlaylistMaker">
