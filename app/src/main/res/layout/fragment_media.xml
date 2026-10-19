@@ -6,35 +6,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".main.ui.activity.MediaActivity"
+    tools:context=".main.ui.activity.MediaFragment"
     android:background="?attr/ActivityBackgroundColor">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:padding="1dp"
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="58dp"
+        android:layout_marginStart="16dp"
+        android:text="@string/media"
+        android:textColor="?attr/TextViewActivityColor"
+        android:textSize="@dimen/text_size_22"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/backFromMediaButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:src="@drawable/ic_back"
-            android:background="?attr/ButtonsColor"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/media"
-            android:textColor="?attr/TextViewActivityColor"
-            android:textSize="@dimen/text_size_22"
-            android:gravity="center_vertical"
-            android:fontFamily="@font/ys_display_medium"
-            />
-    </LinearLayout>
+        android:fontFamily="@font/ys_display_medium"
+        />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"

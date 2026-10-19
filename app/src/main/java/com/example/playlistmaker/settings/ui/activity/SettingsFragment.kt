@@ -1,8 +1,13 @@
 package com.example.playlistmaker.settings.ui.activity
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.AttributeSet
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.Switch
 import androidx.activity.enableEdgeToEdge
@@ -10,37 +15,31 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
-import com.example.playlistmaker.player.ui.view_model.PlayerViewModel
-import com.example.playlistmaker.search.ui.view_model.utils.Resource
 import com.example.playlistmaker.settings.ui.common.app.App
 import com.example.playlistmaker.settings.ui.view_model.ThemeViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsFragment : Fragment() {
     private val viewModel: ThemeViewModel by viewModel()
 
     private var currTheme: Boolean = false
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_settings)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_settings, container, false)
+    }
 
-        val backButton = findViewById<ImageButton>(R.id.backFromSettingsButton)
-        val shareButton = findViewById<ImageButton>(R.id.shareButton)
-        val supportButton = findViewById<ImageButton>(R.id.supportButton)
-        val agreementButton = findViewById<ImageButton>(R.id.agreementButton)
-        val switchButton = findViewById<Switch>(R.id.switchButton)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        viewModel.observeTheme().observe(this) {
+        val shareButton = view.findViewById<ImageButton>(R.id.shareButton)
+        val supportButton = view.findViewById<ImageButton>(R.id.supportButton)
+        val agreementButton = view.findViewById<ImageButton>(R.id.agreementButton)
+        val switchButton = view.findViewById<Switch>(R.id.switchButton)
+
+        viewModel.observeTheme().observe(viewLifecycleOwner) {
             if (it == null) {
                 val systemDark = AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
                 viewModel.setTheme(systemDark)
@@ -49,7 +48,7 @@ class SettingsActivity : AppCompatActivity() {
                 if (switchButton.isChecked != currTheme) {
                     switchButton.isChecked = currTheme
                 }
-                (applicationContext as App).switchTheme(currTheme)
+                (requireContext().applicationContext as App).switchTheme(currTheme)
             }
         }
 
@@ -58,8 +57,6 @@ class SettingsActivity : AppCompatActivity() {
                 viewModel.setTheme(checked)
             }
         }
-
-        backButton.setOnClickListener { finish() }
 
         shareButton.setOnClickListener {
             val shareIntent = Intent(Intent.ACTION_SEND)

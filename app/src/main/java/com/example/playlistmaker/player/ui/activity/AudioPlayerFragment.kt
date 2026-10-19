@@ -1,15 +1,19 @@
 package com.example.playlistmaker.player.ui.activity
 
-
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.player.ui.view_model.PlayerViewModel
@@ -18,44 +22,47 @@ import org.koin.core.parameter.parametersOf
 import java.time.Instant
 import java.time.ZoneOffset
 
-class AudioPlayerActivity() : AppCompatActivity() {
+class AudioPlayerFragment() : Fragment() {
+    companion object {
+        private const val ARGS = "track"
+
+        fun createArgs(fact: String): Bundle =
+            bundleOf(ARGS to fact)
+    }
     private var url = ""
     private var jsonTrack: String? = ""
     private val viewModel: PlayerViewModel by viewModel {
         parametersOf(jsonTrack)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.audio_player)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_audio_player, container, false)
+    }
 
-        val playButton = findViewById<ImageButton>(R.id.playButton)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val playButton = view.findViewById<ImageButton>(R.id.playButton)
         playButton.isEnabled = false
 
-        val backButton = findViewById<ImageButton>(R.id.backFromAudioPlayerActivityButton)
-        val header = findViewById<TextView>(R.id.header)
-        val group = findViewById<TextView>(R.id.group)
-        val lengthTime = findViewById<TextView>(R.id.lengthTime)
-        val album = findViewById<TextView>(R.id.album)
-        val albumName = findViewById<TextView>(R.id.albumName)
-        val year = findViewById<TextView>(R.id.year)
-        val yearNumber = findViewById<TextView>(R.id.yearNumber)
-        val genreName = findViewById<TextView>(R.id.genreName)
-        val countryName = findViewById<TextView>(R.id.countryName)
-        val cover = findViewById<ImageView>(R.id.cover)
-        val time = findViewById<TextView>(R.id.time)
+        val backButton = view.findViewById<ImageButton>(R.id.backFromAudioPlayerActivityButton)
+        val header = view.findViewById<TextView>(R.id.header)
+        val group = view.findViewById<TextView>(R.id.group)
+        val lengthTime = view.findViewById<TextView>(R.id.lengthTime)
+        val album = view.findViewById<TextView>(R.id.album)
+        val albumName = view.findViewById<TextView>(R.id.albumName)
+        val year = view.findViewById<TextView>(R.id.year)
+        val yearNumber = view.findViewById<TextView>(R.id.yearNumber)
+        val genreName = view.findViewById<TextView>(R.id.genreName)
+        val countryName = view.findViewById<TextView>(R.id.countryName)
+        val cover = view.findViewById<ImageView>(R.id.cover)
+        val time = view.findViewById<TextView>(R.id.time)
 
-        backButton.setOnClickListener { finish() }
+        backButton.setOnClickListener { findNavController().navigateUp() }
 
-        jsonTrack = intent.getStringExtra("track")
+        jsonTrack = arguments?.getString(ARGS).orEmpty()
 
-        viewModel.observeTrack().observe(this) {
+        viewModel.observeTrack().observe(viewLifecycleOwner) {
             url = it.previewUrl
 
             if (it.collectionName.isNullOrEmpty()) {
@@ -82,11 +89,11 @@ class AudioPlayerActivity() : AppCompatActivity() {
                 R.drawable.ic_audio_placeholder).into(cover)
         }
 
-        viewModel.observeProgressTime().observe(this) {
+        viewModel.observeProgressTime().observe(viewLifecycleOwner) {
             time.text = it
         }
 
-        viewModel.observePlayerState().observe(this) {
+        viewModel.observePlayerState().observe(viewLifecycleOwner) {
             if(it == PlayerViewModel.STATE_PLAYING) {
                 playButton.setImageResource(R.drawable.ic_pause)
             } else {
