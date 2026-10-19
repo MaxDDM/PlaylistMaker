@@ -12,4 +12,6 @@
     <attr name="KnobColor" format="color" />
     <attr name="TrackColor" format="color" />
     <attr name="PlayButtonColor" format="color" />
+    <attr name="FragmentsTextColor" format="color" />
+    <attr name="TabIndicatorColor" format="color" />
 </resources>

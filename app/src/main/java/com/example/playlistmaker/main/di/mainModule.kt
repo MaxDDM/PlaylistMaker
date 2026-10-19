@@ -7,7 +7,9 @@ import com.example.playlistmaker.main.domain.impl.SearchHistoryInteractorImpl
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import android.content.Context
+import com.example.playlistmaker.main.ui.view_model.FavouritesViewModel
 import com.example.playlistmaker.main.ui.view_model.HistoryViewModel
+import com.example.playlistmaker.main.ui.view_model.PlaylistsViewModel
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.settings.data.StorageClient
 import com.example.playlistmaker.settings.data.storage.PrefsStorageClient
@@ -27,6 +29,14 @@ val mainModule = module {
 
     viewModel {
         HistoryViewModel(get())
+    }
+
+    viewModel {
+        FavouritesViewModel()
+    }
+
+    viewModel {
+        PlaylistsViewModel()
     }
 
     factory (named("searchHistoryStorage")) {
