@@ -1,6 +1,7 @@
 package com.example.playlistmaker.main.ui.activity
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -18,5 +19,20 @@ class RootActivity : AppCompatActivity() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavigationView.itemIconTintList = null
         bottomNavigationView.setupWithNavController(navController)
+
+        val dividerLine = findViewById<View>(R.id.dividerLine)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.audioPlayerFragment -> {
+                    bottomNavigationView.visibility = View.GONE
+                    dividerLine.visibility = View.GONE
+                }
+                else -> {
+                    bottomNavigationView.visibility = View.VISIBLE
+                    dividerLine.visibility = View.VISIBLE
+                }
+            }
+        }
     }
 }
