@@ -27,6 +27,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
@@ -37,6 +38,9 @@ import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.view_model.TracksViewModel
 import com.example.playlistmaker.search.ui.view_model.utils.Resource
 import com.google.gson.Gson
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
@@ -63,13 +67,13 @@ class SearchFragment : Fragment() {
     private lateinit var noMusicText: TextView
     private val handler = Handler(Looper.getMainLooper())
     private var isClickAllowed = true
-    private val searchRunnable = Runnable {
-        tracksViewModel.searchTracks(searchField.text.toString())
-    }
     private val tracksViewModel : TracksViewModel by viewModel()
     private val historyViewModel : HistoryViewModel by viewModel()
 
     private var isHistoryEmpty = true
+
+    private var searchJob: Job? = null
+    private var clickJob: Job? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_search, container, false)
@@ -253,8 +257,11 @@ class SearchFragment : Fragment() {
     }
 
     private fun searchDebounce() {
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+        searchJob?.cancel()
+        searchJob = lifecycleScope.launch {
+            delay(SEARCH_DEBOUNCE_DELAY)
+            tracksViewModel.searchTracks(searchField.text.toString())
+        }
     }
 
     private fun default(view: View) {
@@ -284,7 +291,11 @@ class SearchFragment : Fragment() {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+
+            clickJob = lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
         }
         return current
     }
