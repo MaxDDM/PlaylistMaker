@@ -12,10 +12,6 @@ val commonModule = module {
     }
 
     factory {
-        Executors.newCachedThreadPool()
-    }
-
-    factory {
         Handler(Looper.getMainLooper())
     }
 }

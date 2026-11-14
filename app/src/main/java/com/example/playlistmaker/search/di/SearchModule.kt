@@ -18,7 +18,7 @@ import java.util.concurrent.Executors
 
 val searchModule = module {
     factory {
-        TracksInteractorImpl(get(), get())
+        TracksInteractorImpl(get())
     } bind TracksInteractor::class
 
     factory {

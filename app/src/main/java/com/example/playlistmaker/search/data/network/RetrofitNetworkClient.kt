@@ -10,14 +10,13 @@ import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import android.util.Log
 
 class RetrofitNetworkClient(private val retrofit: Retrofit) : NetworkClient, KoinComponent {
     private val itunesService = retrofit.create(ITunesAPIService::class.java)
-
-    override fun doRequest(dto: Any): Response {
+    override suspend fun doRequest(dto: Any): Response {
         if (dto is TrackSearchRequest) {
-            val resp : retrofit2.Response<TrackSearchResponse> = itunesService.getTracks(dto.expression).execute()
-
+            val resp = itunesService.getTracks(dto.expression)
             val body = resp.body() ?: Response()
 
             return body.apply { resultCode = resp.code() }
