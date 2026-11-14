@@ -16,7 +16,7 @@ class RetrofitNetworkClient(private val retrofit: Retrofit) : NetworkClient, Koi
     private val itunesService = retrofit.create(ITunesAPIService::class.java)
     override suspend fun doRequest(dto: Any): Response {
         if (dto is TrackSearchRequest) {
-            val resp = retrofit2.Response.success(itunesService.getTracks(dto.expression))
+            val resp = itunesService.getTracks(dto.expression)
             val body = resp.body() ?: Response()
 
             return body.apply { resultCode = resp.code() }

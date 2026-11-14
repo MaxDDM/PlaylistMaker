@@ -191,6 +191,7 @@ class SearchFragment : Fragment() {
 
         searchField.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
+                searchJob?.cancel()
                 tracksViewModel.searchTracks(searchField.text.toString())
                 true
             } else {

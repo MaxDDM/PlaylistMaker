@@ -1,5 +1,6 @@
 package com.example.playlistmaker.search.ui.view_model
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -25,6 +26,8 @@ class TracksViewModel(private val tracksInteractor: TracksInteractor) : ViewMode
             viewModelScope.launch {
                 tracksInteractor.searchTracks(expression)
                     .catch { exception ->
+                        exception.message?.let { Log.e("TracksViewModel", it) }
+                        tracksLiveData.postValue(Resource.Error(expression))
                         tracksLiveData.postValue(Resource.Error(expression))
                     }
                     .collect { value ->
